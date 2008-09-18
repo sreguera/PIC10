@@ -1,0 +1,3 @@
+PIC10    -*-  mode: org; -*-
+
+* Instruction utilities
