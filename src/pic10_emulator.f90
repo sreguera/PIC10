@@ -279,11 +279,33 @@ contains
 
   subroutine pic10_SUBWF(pic)
     type(pic10), intent(inout) :: pic
+    integer :: addr
+    integer :: arg
+    integer :: res
+    addr = pic10_f_field(pic%ir)
+    call pic10_rget(pic, addr, arg)
+    res = arg - pic%w 
+    if (pic10_d_field(pic%ir) == 0) then
+       pic%w = res
+    else
+       call pic10_rset(pic, addr, res)
+    end if
     call pic10_status(pic, C+DC+Z)
   end subroutine pic10_SUBWF
 
   subroutine pic10_SWAPF(pic)
     type(pic10), intent(inout) :: pic
+    integer :: addr
+    integer :: arg
+    integer :: res
+    addr = pic10_f_field(pic%ir)
+    call pic10_rget(pic, addr, arg)
+    res = ibits(arg, 4, 4) + ishft(ibits(arg, 0, 4), 4)
+    if (pic10_d_field(pic%ir) == 0) then
+       pic%w = res
+    else
+       call pic10_rset(pic, addr, res)
+    end if
   end subroutine pic10_SWAPF
 
   subroutine pic10_TRIS(pic)
@@ -381,7 +403,7 @@ contains
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: flags
   end subroutine pic10_status
-  
+
   subroutine pic10_rget(pic, addr, val)
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: addr
