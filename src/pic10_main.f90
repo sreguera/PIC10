@@ -1,5 +1,6 @@
 program pic10_main
   use pic10_emulator
+  use pic10_disasm
   implicit none
 
   type(pic10) :: pic
@@ -9,7 +10,8 @@ program pic10_main
 
   call pic10_init(pic)
   do
-     write (*, "(Z4.3':'Z4.3'> ')", advance="no") pic%pc, pic%ir
+     write (*, "(Z4.3':'Z4.3' 'A10'> ')", advance="no") &
+          pic%pc, pic%ir, pic10_decode(pic%ir)
      read (*,*) command
      if (command == "s") then
         call pic10_step(pic)
