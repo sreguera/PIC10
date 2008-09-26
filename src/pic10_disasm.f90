@@ -103,31 +103,43 @@ contains
   character(len=40) function pic10_par_fd(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
-    pic10_par_fd = name
+    character(len=40) :: out
+    write (out,"(A6,' ',I3,', ',I1)") &
+         name, pic10_f_field(inst), pic10_d_field(inst)
+    pic10_par_fd = out
   end function pic10_par_fd
 
   character(len=40) function pic10_par_f(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
-    pic10_par_f = name
+    character(len=40) :: out
+    write (out,"(A6,' ',I3)") name, pic10_f_field(inst)
+    pic10_par_f = out
   end function pic10_par_f
 
   character(len=40) function pic10_par_fb(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
-    pic10_par_fb = name
+    character(len=40) out
+    write (out,"(A6,' ',I3,', ',I1)") &
+         name, pic10_f_field(inst), pic10_b_field(inst)
+    pic10_par_fb = out
   end function pic10_par_fb
 
   character(len=40) function pic10_par_k(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
-    pic10_par_k = name
+    character(len=40) :: out
+    write (out,"(A6,' ',I3)") name, pic10_k_field(inst)
+    pic10_par_k = out
   end function pic10_par_k
 
   character(len=40) function pic10_par_lk(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
-    pic10_par_lk = name
+    character(len=40) :: out
+    write (out,"(A6,' ',I3)") name, pic10_lk_field(inst)
+    pic10_par_lk = out
   end function pic10_par_lk
 
   integer function pic10_f_field(inst)

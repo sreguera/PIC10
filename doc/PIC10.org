@@ -1,3 +1,6 @@
 PIC10    -*-  mode: org; -*-
 
-* Instruction utilities
+* Commands
+** s step
+** d disassemble
+** q quit

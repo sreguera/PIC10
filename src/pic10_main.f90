@@ -10,11 +10,12 @@ program pic10_main
 
   call pic10_init(pic)
   do
-     write (*, "(Z4.3':'Z4.3' 'A10'> ')", advance="no") &
-          pic%pc, pic%ir, pic10_decode(pic%ir)
+     write (*, "(Z4.3,':',Z4.3,'> ')", advance="no") pic%pc, pic%ir
      read (*,*) command
      if (command == "s") then
         call pic10_step(pic)
+     elseif (command == "d") then
+        write (*,*) pic10_decode(pic%ir)
      elseif (command == "q") then
         exit
      else
