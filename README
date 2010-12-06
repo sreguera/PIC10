@@ -1,3 +1,12 @@
+PIC10, A PIC10 microcontroller emulator.
+
+The PIC10 is a Harvard architecture microcontroller made by the Microchip
+Technology company. A description of this processor and can be found in its
+Wikipedia entry:
+
+  http://en.wikipedia.org/wiki/PIC10
+
+
 LICENSE
 
 See the LICENSE file.
