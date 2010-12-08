@@ -1,15 +1,24 @@
+!------------------------------------------------------------------------
+! Copyright (c) 2010 Jose Sebastian Reguera Candal.
+! This file is part of PIC10, The PIC10 microcontroller emulator.
+!------------------------------------------------------------------------
+
+! Emulator implementation for the PIC10 emulator
+!
 module pic10_emulator
   implicit none
   private
 
   public :: pic10, pic10_init, pic10_fini, pic10_step
 
+  ! PIC10 microcontroller state
+  !
   type pic10
-     integer :: pc
-     integer :: ir
-     integer :: w
-     integer, dimension(0:255) :: code
-     integer, dimension(0:31) :: data
+     integer :: pc                     ! Program Counter
+     integer :: ir                     ! Instruction Register
+     integer :: w                      ! Working Register
+     integer, dimension(0:255) :: code ! Program Memory
+     integer, dimension(0:31) :: data  ! Data Memory
   end type pic10
 
   integer, parameter :: C = 1
@@ -27,6 +36,8 @@ module pic10_emulator
 
 contains
 
+  ! Initialize the PIC10 state
+  !
   subroutine pic10_init(pic)
     type(pic10), intent(out) :: pic
     integer :: i
@@ -40,10 +51,14 @@ contains
     end do
   end subroutine pic10_init
 
+  ! Finalize the PIC10 state
+  !
   subroutine pic10_fini(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_fini
 
+  ! Perform one step (instruction cycle)
+  !
   subroutine pic10_step(pic)
     type(pic10), intent(inout) :: pic
     pic%pc = pic%pc + 1
@@ -51,6 +66,8 @@ contains
     pic%ir = pic%code(pic%pc)
   end subroutine pic10_step
 
+  ! Decode and execute the current instruction
+  !
   subroutine pic10_exec(pic)
     type(pic10), intent(inout) :: pic
     select case (ibits(pic%ir, 6, 6))
@@ -133,6 +150,8 @@ contains
     end select
   end subroutine pic10_exec
 
+  ! Execute an ADDWF instruction
+  !
   subroutine pic10_ADDWF(pic)
     type(pic10), intent(inout) :: pic
     integer :: addr
@@ -149,36 +168,52 @@ contains
     call pic10_status(pic, C+DC+Z)
   end subroutine pic10_ADDWF
 
+  ! Execute an ANDLW instruction
+  !
   subroutine pic10_ANDLW(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_LW(pic, OP_AND)
   end subroutine pic10_ANDLW
 
+  ! Execute an ANDWF instruction
+  !
   subroutine pic10_ANDWF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_WF(pic, OP_AND)
   end subroutine pic10_ANDWF
 
+  ! Execute a BCF instruction
+  !
   subroutine pic10_BCF(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_BCF
 
+  ! Execute a BSF instruction
+  !
   subroutine pic10_BSF(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_BSF
 
+  ! Execute a BTFSC instruction
+  !
   subroutine pic10_BTFSC(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_BTFSC
 
+  ! Execute a BTFSS instruction
+  !
   subroutine pic10_BTFSS(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_BTFSS
 
+  ! Execute a CALL instruction
+  !
   subroutine pic10_CALL(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_CALL
 
+  ! Execute a CLRF instruction
+  !
   subroutine pic10_CLRF(pic)
     type(pic10), intent(inout) :: pic
     integer :: addr
@@ -187,96 +222,136 @@ contains
     call pic10_status(pic, Z)
   end subroutine pic10_CLRF
 
+  ! Execute a CLRW instruction
+  !
   subroutine pic10_CLRW(pic)
     type(pic10), intent(inout) :: pic
     pic%w = 0
     call pic10_status(pic, Z)
   end subroutine pic10_CLRW
 
+  ! Execute a CLRWTD instruction
+  !
   subroutine pic10_CLRWTD(pic)
     type(pic10), intent(inout) :: pic
     call pic10_status(pic, TO+PD)
   end subroutine pic10_CLRWTD
 
+  ! Execute a COMF instruction
+  !
   subroutine pic10_COMF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_WF(pic, OP_COM)
   end subroutine pic10_COMF
 
+  ! Execute a DECF instruction
+  !
   subroutine pic10_DECF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_WF(pic, OP_DEC)
   end subroutine pic10_DECF
 
+  ! Execute a DECFSZ instruction
+  !
   subroutine pic10_DECFSZ(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_DECFSZ
 
+  ! Execute a GOTO instruction
+  !
   subroutine pic10_GOTO(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_GOTO
 
+  ! Execute an INCF instruction
+  !
   subroutine pic10_INCF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_WF(pic, OP_INC)
   end subroutine pic10_INCF
 
+  ! Execute an INCFSZ instruction
+  !
   subroutine pic10_INCFSZ(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_INCFSZ
 
+  ! Execute an IORLW instruction
+  !
   subroutine pic10_IORLW(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_LW(pic, OP_IOR)
   end subroutine pic10_IORLW
 
+  ! Execute an IORWF instruction
+  !
   subroutine pic10_IORWF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_WF(pic, OP_IOR)
   end subroutine pic10_IORWF
 
+  ! Execute a MOVF instruction
+  !
   subroutine pic10_MOVF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_status(pic, Z)
   end subroutine pic10_MOVF
 
+  ! Execute a MOVLW instruction
+  !
   subroutine pic10_MOVLW(pic)
     type(pic10), intent(inout) :: pic
     pic%w = pic10_k_field(pic%ir)
   end subroutine pic10_MOVLW
 
+  ! Execute a MOVWF instruction
+  !
   subroutine pic10_MOVWF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_rset(pic, pic10_f_field(pic%ir), pic%w)
   end subroutine pic10_MOVWF
 
+  ! Execute a NOP instruction
+  !
   subroutine pic10_NOP(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_NOP
 
+  ! Execute an OPTION instruction
+  !
   subroutine pic10_OPTION(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_OPTION
 
+  ! Execute a RETLW instruction
+  !
   subroutine pic10_RETLW(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_RETLW
 
+  ! Execute a RLF instruction
+  !
   subroutine pic10_RLF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_status(pic, C)
   end subroutine pic10_RLF
 
+  ! Execute a RRF instruction
+  !
   subroutine pic10_RRF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_status(pic, C)
   end subroutine pic10_RRF
 
+  ! Execute a SLEEP instruction
+  !
   subroutine pic10_SLEEP(pic)
     type(pic10), intent(inout) :: pic
     call pic10_status(pic, TO+PD)
   end subroutine pic10_SLEEP
 
+  ! Execute a SUBWF instruction
+  !
   subroutine pic10_SUBWF(pic)
     type(pic10), intent(inout) :: pic
     integer :: addr
@@ -293,6 +368,8 @@ contains
     call pic10_status(pic, C+DC+Z)
   end subroutine pic10_SUBWF
 
+  ! Execute a SWAPF instruction
+  !
   subroutine pic10_SWAPF(pic)
     type(pic10), intent(inout) :: pic
     integer :: addr
@@ -308,24 +385,34 @@ contains
     end if
   end subroutine pic10_SWAPF
 
+  ! Execute a TRIS instruction
+  !
   subroutine pic10_TRIS(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_TRIS
 
+  ! Execute an UNKNOWN instruction
+  !
   subroutine pic10_UNKNOWN(pic)
     type(pic10), intent(inout) :: pic
   end subroutine pic10_UNKNOWN
 
+  ! Execute a XORLW instruction
+  !
   subroutine pic10_XORLW(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_LW(pic, OP_XOR)
   end subroutine pic10_XORLW
 
+  ! Execute a XORWF instruction
+  !
   subroutine pic10_XORWF(pic)
     type(pic10), intent(inout) :: pic
     call pic10_OP_WF(pic, OP_XOR)
   end subroutine pic10_XORWF
 
+  ! Execute a literal/working register operation
+  !
   subroutine pic10_OP_LW(pic, op)
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: op
@@ -344,6 +431,8 @@ contains
     call pic10_status(pic, Z)
   end subroutine pic10_OP_LW
 
+  ! Execute a working register/register file operation
+  !
   subroutine pic10_OP_WF(pic, op)
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: op
@@ -374,36 +463,50 @@ contains
     call pic10_status(pic, C+DC+Z)
   end subroutine pic10_OP_WF
 
+  ! Return the f instruction field (register file address)
+  !
   integer function pic10_f_field(inst)
     integer, intent(in) :: inst
     pic10_f_field = ibits(inst, 0, 5)
   end function pic10_f_field
 
+  ! Return the d instruction field (destination select)
+  !
   integer function pic10_d_field(inst)
     integer, intent(in) :: inst
     pic10_d_field = ibits(inst, 5, 1)
   end function pic10_d_field
 
+  ! Return the b instruction field (bit address)
+  !
   integer function pic10_b_field(inst)
     integer, intent(in) :: inst
     pic10_b_field = ibits(inst, 5, 3)
   end function pic10_b_field
 
+  ! Return the k instruction field (literal)
+  !
   integer function pic10_k_field(inst)
     integer, intent(in) :: inst
     pic10_k_field = ibits(inst, 0, 8)
   end function pic10_k_field
 
+  ! Return the long k instruction field (literal)
+  !
   integer function pic10_lk_field(inst)
     integer, intent(in) :: inst
     pic10_lk_field = ibits(inst, 0, 9)
   end function pic10_lk_field
 
+  ! Update the status ??
+  !
   subroutine pic10_status(pic, flags)
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: flags
   end subroutine pic10_status
 
+  ! Get the value of a register
+  !
   subroutine pic10_rget(pic, addr, val)
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: addr
@@ -411,6 +514,8 @@ contains
     val = pic%data(addr)
   end subroutine pic10_rget
 
+  ! Set the value of a register
+  !
   subroutine pic10_rset(pic, addr, val)
     type(pic10), intent(inout) :: pic
     integer, intent(in) :: addr

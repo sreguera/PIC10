@@ -1,3 +1,10 @@
+!------------------------------------------------------------------------
+! Copyright (c) 2010 Jose Sebastian Reguera Candal.
+! This file is part of PIC10, The PIC10 microcontroller emulator.
+!------------------------------------------------------------------------
+
+! Read-Eval-Print-Loop for the PIC10 emulator
+!
 module pic10_repl
   use pic10_emulator
   use pic10_disasm
@@ -8,6 +15,8 @@ module pic10_repl
 
 contains
 
+  ! Run the Read-Eval-Print-Loop
+  !
   subroutine pic10_run
     type(pic10) :: pic
     character(len=10) :: command

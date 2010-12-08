@@ -1,3 +1,10 @@
+!------------------------------------------------------------------------
+! Copyright (c) 2010 Jose Sebastian Reguera Candal.
+! This file is part of PIC10, The PIC10 microcontroller emulator.
+!------------------------------------------------------------------------
+
+! PIC10 instruction disassemble for the PIC10 emulator
+!
 module pic10_disasm
   implicit none
   private
@@ -6,6 +13,8 @@ module pic10_disasm
 
 contains
 
+  ! Return a string containing the disassemble of the passed instruction
+  !
   character(len=40) function pic10_decode(inst)
     integer, intent(inout) :: inst
     select case (ibits(inst, 6, 6))
@@ -88,18 +97,24 @@ contains
     end select
   end function pic10_decode
 
+  ! Return a string containing the disasm. of an unknown inst.
+  !
   character(len=40) function pic10_unknown(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
     pic10_unknown = "UNKNOWN"
   end function pic10_unknown
 
+  ! Return a string containing the disasm. of a inst. without parameters
+  !
   character(len=40) function pic10_unpar(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
     pic10_unpar = name
   end function pic10_unpar
 
+  ! Return a string containing the disasm. of a inst. with f, d parameters
+  !
   character(len=40) function pic10_par_fd(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
@@ -109,6 +124,8 @@ contains
     pic10_par_fd = out
   end function pic10_par_fd
 
+  ! Return a string containing the disasm. of a inst. with an f parameter
+  !
   character(len=40) function pic10_par_f(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
@@ -117,6 +134,8 @@ contains
     pic10_par_f = out
   end function pic10_par_f
 
+  ! Return a string containing the disasm. of a inst. with f, b parameters
+  !
   character(len=40) function pic10_par_fb(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
@@ -126,6 +145,8 @@ contains
     pic10_par_fb = out
   end function pic10_par_fb
 
+  ! Return a string containing the disasm. of a inst. with a k parameter
+  !
   character(len=40) function pic10_par_k(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
@@ -134,6 +155,8 @@ contains
     pic10_par_k = out
   end function pic10_par_k
 
+  ! Return a string containing the disasm. of a inst. with a long k parameter
+  !
   character(len=40) function pic10_par_lk(name, inst)
     character(len=*), intent(in) :: name
     integer, intent(in) :: inst
@@ -142,26 +165,36 @@ contains
     pic10_par_lk = out
   end function pic10_par_lk
 
+  ! Return the f instruction field (register file address)
+  !
   integer function pic10_f_field(inst)
     integer, intent(in) :: inst
     pic10_f_field = ibits(inst, 0, 5)
   end function pic10_f_field
 
+  ! Return the d instruction field (destination select)
+  !
   integer function pic10_d_field(inst)
     integer, intent(in) :: inst
     pic10_d_field = ibits(inst, 5, 1)
   end function pic10_d_field
 
+  ! Return the b instruction field (bit address)
+  !
   integer function pic10_b_field(inst)
     integer, intent(in) :: inst
     pic10_b_field = ibits(inst, 5, 3)
   end function pic10_b_field
 
+  ! Return the k instruction field (literal)
+  !
   integer function pic10_k_field(inst)
     integer, intent(in) :: inst
     pic10_k_field = ibits(inst, 0, 8)
   end function pic10_k_field
 
+  ! Return the long k instruction field (literal)
+  !
   integer function pic10_lk_field(inst)
     integer, intent(in) :: inst
     pic10_lk_field = ibits(inst, 0, 9)
