@@ -16,7 +16,7 @@ contains
   ! Return a string containing the disassemble of the passed instruction
   !
   character(len=40) function pic10_decode(inst)
-    integer, intent(inout) :: inst
+    integer, intent(in) :: inst
     select case (ibits(inst, 6, 6))
        case (b"000000")
           select case (ibits(inst, 0, 6))

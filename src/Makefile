@@ -2,6 +2,8 @@ FC = gfortran
 
 OBJS = pic10_emulator.o pic10_disasm.o pic10_repl.o pic10_main.o
 
+TEST_OBJS = pic10_disasm.o pic10_disasm_test.o
+
 all: pic10
 
 pic10: $(OBJS)
@@ -17,6 +19,13 @@ pic10_disasm.o: pic10_disasm.f90
 	$(FC) -c $<
 
 pic10_repl.o: pic10_repl.f90
+	$(FC) -c $<
+
+pic10_test: $(TEST_OBJS)
+	$(FC) $+ -o $@
+	./$@
+
+pic10_disasm_test.o: pic10_disasm_test.f90
 	$(FC) -c $<
 
 clean:
