@@ -186,6 +186,15 @@ contains
   !
   subroutine pic10_BCF(pic)
     type(pic10), intent(inout) :: pic
+    integer :: addr
+    integer :: arg
+    integer :: bit
+    integer :: res
+    addr = pic10_f_field(pic%ir)
+    call pic10_rget(pic, addr, arg)
+    bit = pic10_b_field(pic%ir)
+    res = ibclr(arg, bit)
+    call pic10_rset(pic, addr, res)
   end subroutine pic10_BCF
 
   ! Execute a BSF instruction
