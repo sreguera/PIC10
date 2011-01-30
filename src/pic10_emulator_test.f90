@@ -9,10 +9,46 @@ program pic10_emulator_test
   use pic10_emulator
   implicit none
 
+  call test_addwf_0
+  call test_addwf_1
   call test_bcf
   call test_bsf
 
 contains
+
+  subroutine test_addwf_0
+    type(pic10) :: pic
+    integer :: expected
+    integer :: res
+    call pic10_init(pic)
+    !              iiiiiidfffff
+    pic%ir = int(b"000111010001")
+    pic%w  = 11
+    pic%data(17) = 20
+    expected = 31
+    call pic10_step(pic)
+    res = pic%w
+    if (res /= expected) then
+       write (*,*) "Error: addwf: Expected <", expected, "> but got <", res, ">"
+    end if
+  end subroutine test_addwf_0
+
+  subroutine test_addwf_1
+    type(pic10) :: pic
+    integer :: expected
+    integer :: res
+    call pic10_init(pic)
+    !              iiiiiidfffff
+    pic%ir = int(b"000111110001")
+    pic%w  = 11
+    pic%data(17) = 20
+    expected = 31
+    call pic10_step(pic)
+    res = pic%data(17)
+    if (res /= expected) then
+       write (*,*) "Error: addwf: Expected <", expected, "> but got <", res, ">"
+    end if
+  end subroutine test_addwf_1
 
   subroutine test_bcf
     type(pic10) :: pic
@@ -26,7 +62,7 @@ contains
     call pic10_step(pic)
     res = pic%data(17) 
     if (res /= expected) then
-       write (*,*) "Error: Expected <", expected, "> but got <", res, ">"
+       write (*,*) "Error: bcf: Expected <", expected, "> but got <", res, ">"
     end if
   end subroutine test_bcf
 
@@ -42,7 +78,7 @@ contains
     call pic10_step(pic)
     res = pic%data(17) 
     if (res /= expected) then
-       write (*,*) "Error: Expected <", expected, "> but got <", res, ">"
+       write (*,*) "Error: bsf: Expected <", expected, "> but got <", res, ">"
     end if
   end subroutine test_bsf
 
